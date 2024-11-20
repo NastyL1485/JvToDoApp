@@ -1,0 +1,93 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/bg">
+
+
+    <EditText
+        android:id="@+id/noteName"
+        android:layout_width="272sp"
+        android:layout_height="50sp"
+        android:layout_marginLeft="50sp"
+        android:layout_marginTop="195sp"
+        android:backgroundTint="@color/commonText"
+        android:ems="10"
+        android:fontFamily="@font/montserrat_medium"
+        android:hint="Название задачи"
+        android:inputType="text"
+        android:textColorHint="@color/commonText"
+        android:textColor="@color/commonText"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/noteTime"
+        android:layout_width="272sp"
+        android:layout_height="50sp"
+        android:layout_marginLeft="50sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
+        android:backgroundTint="@color/commonText"
+        android:ems="10"
+        android:fontFamily="@font/montserrat_medium"
+        android:hint="Время выполнения"
+        android:inputType="time"
+        android:textColorHint="@color/commonText"
+        android:textColor="@color/commonText"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/choose_date_button"
+        android:text="Выбрать дату"
+        android:layout_width="226sp"
+        android:layout_height="48sp"
+        android:layout_marginLeft="70sp"
+        android:background="@drawable/back_btn_bg"
+        android:fontFamily="@font/montserrat_medium"
+        android:minHeight="48dp"
+        android:textColor="@color/addNote"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/selected_date"
+        android:layout_width="272sp"
+        android:layout_height="50sp"
+        android:layout_marginLeft="50sp"
+        android:layout_marginBottom="5sp"
+        android:backgroundTint="@color/commonText"
+        android:ems="10"
+        android:fontFamily="@font/montserrat_medium"
+        android:layout_marginTop="5sp"
+        android:text="Выбранная дата: "
+        android:textSize="16sp"
+        android:paddingLeft="5sp"
+        android:textColor="@color/commonText"/>
+
+    <Button
+        android:id="@+id/createNote"
+        android:layout_width="231sp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70sp"
+        android:layout_marginTop="20sp"
+        android:background="@drawable/add_btn_bg"
+        android:fontFamily="@font/montserrat_medium"
+        android:hint="Создать заметку"
+        android:text="Создать заметку"
+        android:textColor="@color/bg"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="226sp"
+        android:layout_height="48sp"
+        android:layout_marginLeft="93sp"
+        android:layout_marginTop="170sp"
+        android:background="@drawable/back_btn_bg"
+        android:fontFamily="@font/montserrat_medium"
+        android:minHeight="48dp"
+        android:onClick="backToMain"
+        android:text="Вернуться обратно"
+        android:textColor="@color/addNote"
+        android:textSize="16sp" />
+</LinearLayout>
