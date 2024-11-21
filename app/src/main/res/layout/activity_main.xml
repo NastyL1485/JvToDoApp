@@ -39,17 +39,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/addNote">
 
-        <TextView
-            android:id="@+id/noteExample"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
+            <TextView
+                android:id="@+id/noteExample"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:layout_marginTop="40dp" />
+        </LinearLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

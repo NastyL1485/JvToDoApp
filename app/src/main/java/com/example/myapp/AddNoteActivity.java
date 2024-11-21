@@ -60,6 +60,7 @@ public class AddNoteActivity extends AppCompatActivity {
     public void backToMain(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void showDatePickerDialog() {
@@ -72,8 +73,14 @@ public class AddNoteActivity extends AppCompatActivity {
         // Создаем диалог выбора даты
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Обновляем текст на TextView с выбранной датой
-                    selectedDateTextView.setText("Выбранная дата: " + selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
+                    // Форматируем выбранную дату в формат yyyy-MM-dd
+                    String formattedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
+
+                    // Обновляем текст на TextView с выбранной датой в нужном формате
+                    selectedDateTextView.setText("Выбранная дата: " + formattedDate);
+
+                    // Сохраняем эту дату в поле, которое будет использоваться при сохранении задачи
+                    noteDate.setText(formattedDate);
                 }, year, month, day);
 
         datePickerDialog.show(); // Показываем диалог выбора даты
@@ -82,7 +89,7 @@ public class AddNoteActivity extends AppCompatActivity {
     private void saveTask() {
         // Получаем данные из полей ввода
         String title = noteName.getText().toString();
-        String date = noteDate.getText().toString();
+        String date = noteDate.getText().toString();  // Дата уже отформатирована в yyyy-MM-dd
         String time = noteTime.getText().toString();
 
         // Логирование полученных данных
@@ -105,7 +112,7 @@ public class AddNoteActivity extends AppCompatActivity {
         TaskDao taskDao = db.taskDao();
         Task task = new Task();
         task.title = title;
-        task.date = date;
+        task.date = date;  // Здесь сохраняем дату в формате yyyy-MM-dd
         task.time = time;
         task.status = false;
 
@@ -115,13 +122,21 @@ public class AddNoteActivity extends AppCompatActivity {
         // Асинхронная вставка данных в базу данных
         new Thread(() -> {
             try {
-                Log.d("AddNoteActivity", "Начинаем сохранение задачи в базе...");
+                // Проверка и логирование DAO
+                if (taskDao != null) {
+                    Log.d("AddNoteActivity", "TaskDao инициализировано.");
+                } else {
+                    Log.e("AddNoteActivity", "Ошибка: taskDao не инициализировано.");
+                }
+
+                // Вставка данных в базу
                 taskDao.insert(task);
-                Log.d("AddNoteActivity", "Задача успешно сохранена.");
+                Log.d("AddNoteActivity", "Задача успешно сохранена в базе данных.");
 
                 // Обновление UI на главном потоке
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Задача сохранена!", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);  // Возвращаем результат в MainActivity
                     finish(); // Закрытие активности после сохранения
                 });
             } catch (Exception e) {
