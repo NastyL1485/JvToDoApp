@@ -78,20 +78,36 @@ public class MainActivity extends AppCompatActivity {
                             // Для каждой уникальной даты создаем новый LinearLayout
                             for (String date : tasksByDate.keySet()) {
                                 LinearLayout dateLayout = new LinearLayout(MainActivity.this);
+                                dateLayout.setBackgroundResource(R.drawable.rounded_bg); // Устанавливаем фон для dateLayout
                                 dateLayout.setOrientation(LinearLayout.VERTICAL);  // Вертикальная ориентация для задач
+
+                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT, // Ширина, можно использовать MATCH_PARENT
+                                        LinearLayout.LayoutParams.WRAP_CONTENT // Высота, можно использовать WRAP_CONTENT
+                                );
+
+                                // Устанавливаем отступы (10dp) снизу
+                                int marginBottom = (int) (10 * getResources().getDisplayMetrics().density); // Переводим dp в пиксели
+                                layoutParams.setMargins(0, 0, 0, marginBottom); // Отступы: (левая, верхняя, правая, нижняя)
+
+                                dateLayout.setLayoutParams(layoutParams);
 
                                 // Создаем TextView для отображения даты
                                 TextView dateTextView = new TextView(MainActivity.this);
                                 dateTextView.setText(date);  // Устанавливаем дату как заголовок
                                 dateTextView.setTextSize(18);
                                 dateTextView.setTypeface(null, Typeface.BOLD);
-                                dateLayout.addView(dateTextView);  // Добавляем TextView с датой
+                                dateTextView.setPadding(60, 0, 40, 20);
+                                dateLayout.addView(dateTextView);
+                                  // Добавляем TextView с датой
 
                                 // Для каждой задачи на эту дату создаем новый TextView и добавляем
                                 for (Task task : tasksByDate.get(date)) {
+
                                     TextView taskTextView = new TextView(MainActivity.this);
                                     taskTextView.setText(task.getTitle());  // Устанавливаем название задачи
                                     taskTextView.setTextSize(16);
+                                    taskTextView.setPadding(60, 0, 40, 30);
                                     dateLayout.addView(taskTextView);  // Добавляем TextView с задачей
                                 }
 

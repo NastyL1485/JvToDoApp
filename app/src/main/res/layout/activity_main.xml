@@ -32,7 +32,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="86dp"
@@ -47,12 +47,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxHeight="210dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:background="@drawable/rounded_bg">
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="10dp"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:verticalScrollbarPosition="right"
+            android:textColor="@color/commonText">
         </LinearLayout>
     </ScrollView>
 
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    android:background="@drawable/rounded_bg"-->
