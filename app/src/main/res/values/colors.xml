@@ -5,4 +5,5 @@
     <color name="bg">#EEEBE6</color>
     <color name="addNote">#9E9DD6</color>
     <color name="commonText">#595959</color>
+    <color name="taskBg">#EBEBFB</color>
 </resources>

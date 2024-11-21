@@ -44,7 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:background="@drawable/rounded_bg">
 
             <TextView
                 android:id="@+id/noteExample"
@@ -53,7 +54,15 @@
                 android:text="TextView"
                 android:textColor="@color/black"
                 android:textSize="24sp"
-                android:layout_marginTop="40dp" />
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+                android:maxHeight="210dp"
+                android:scrollbars="vertical"
+                android:scrollHorizontally="false"
+                android:focusable="true"
+                android:focusableInTouchMode="true"/>
         </LinearLayout>
     </ScrollView>
 

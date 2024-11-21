@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/taskBg" /> <!-- Замените на нужный цвет -->
+    <corners android:radius="40dp" /> <!-- Установите нужный радиус -->
+    <stroke android:color="@color/addNote" android:width="3dp" />
+</shape>
