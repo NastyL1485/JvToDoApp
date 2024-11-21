@@ -37,33 +37,22 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="86dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/addNote">
+        app:layout_constraintBottom_toTopOf="@id/addNote"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:verticalScrollbarPosition="right">
 
         <LinearLayout
+            android:id="@+id/tasksLayout"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxHeight="210dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:background="@drawable/rounded_bg">
-
-            <TextView
-                android:id="@+id/noteExample"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginBottom="20dp"
-                android:maxHeight="210dp"
-                android:scrollbars="vertical"
-                android:scrollHorizontally="false"
-                android:focusable="true"
-                android:focusableInTouchMode="true"/>
         </LinearLayout>
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
