@@ -1,11 +1,14 @@
 package com.example.myapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.room.Room;
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     // Метод для получения данных из базы данных
     public void fetchData() {
         new Thread(new Runnable() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public void run() {
                 try {
@@ -123,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                                     // Устанавливаем цвет для текста
                                     taskTextView.setTextColor(taskTextColor);
 
-                                    // Устанавливаем фиксированную ширину (150 пикселей) и allow wrapping
+                                    // Устанавливаем фиксированную ширину (190 пикселей) и allow wrapping
                                     LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
                                             (int) (190 * getResources().getDisplayMetrics().density),
                                             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -134,6 +139,40 @@ public class MainActivity extends AppCompatActivity {
                                     taskTextView.setEllipsize(null);  // Убираем обрезку текста
                                     taskTextView.setPadding(60, 0, 0, 30);  // Добавляем отступ слева
                                     taskLayout.addView(taskTextView);  // Добавляем название задачи в layout
+
+                                    taskTextView.setOnTouchListener(new View.OnTouchListener() {
+                                        private static final int LONG_PRESS_THRESHOLD = 1000; // 3 секунды
+                                        @SuppressLint("ClickableViewAccessibility")
+                                        private Handler handler = new Handler();
+                                        private Runnable runnable;
+
+                                        @Override
+                                        public boolean onTouch(View v, MotionEvent event) {
+                                            switch (event.getAction()) {
+                                                case MotionEvent.ACTION_DOWN:
+                                                    // Запускаем отсчет времени
+                                                    runnable = new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            showDeleteConfirmationDialog(task.getId());  // Показать диалог удаления
+                                                        }
+                                                    };
+                                                    handler.postDelayed(runnable, LONG_PRESS_THRESHOLD); // Запускать через 3 секунды
+                                                    return true;
+
+                                                case MotionEvent.ACTION_UP:
+                                                case MotionEvent.ACTION_CANCEL:
+                                                    // Если пользователь отпустил палец или отменил действие, отменяем обработку
+                                                    handler.removeCallbacks(runnable);
+
+                                                    // Важно! Вызов performClick() для правильной обработки кликов (предупреждение)
+                                                    v.performClick(); // Это вызовет корректную обработку клика
+                                                    return true;
+                                            }
+                                            return false;
+                                        }
+                                    });
+
 
                                     // Создаем TextView для времени задачи с отступом 20 пикселей
                                     TextView timeTextView = new TextView(MainActivity.this);
@@ -184,6 +223,35 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
+
+    private void showDeleteConfirmationDialog(int taskId) {
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle("Подтверждение")
+                .setMessage("Вы уверены, что хотите удалить задачу?")
+                .setPositiveButton("Да", (dialog, which) -> {
+                    // Если да, то удаляем задачу по id и обновляем данные
+                    deleteTaskById(taskId);  // Удаление задачи по id
+                })
+                .setNegativeButton("Нет", null)
+                .show();
+    }
+
+    // Метод для удаления задачи по ее id
+    private void deleteTaskById(int taskId) {
+        new Thread(() -> {
+            try {
+                // Получаем задачу по id и удаляем
+                Task taskToDelete = database.taskDao().getTaskById(taskId);
+                if (taskToDelete != null) {
+                    database.taskDao().deleteTask(taskToDelete);  // Удаляем задачу
+                    fetchData();  // Обновляем отображение задач
+                }
+            } catch (Exception e) {
+                Log.e("MainActivity", "Ошибка при удалении задачи", e);
+            }
+        }).start();
+    }
+
 
     @Override
     protected void onResume() {

@@ -1,5 +1,6 @@
 package com.example.myapp;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import java.util.List;
@@ -18,11 +19,11 @@ public interface TaskDao {
     @Query("SELECT * FROM tasks WHERE status = 0") // 0 - false
     List<Task> getPendingTasks();
 
-    @Query("DELETE FROM tasks WHERE id = :id")
-    void deleteTask(int id);
+    @Delete
+    void deleteTask(Task task);
 
-    @Query("SELECT * FROM tasks WHERE date = :id")
-    Task getTasksById(String id);
+    @Query("SELECT * FROM tasks WHERE id = :id")
+    Task getTaskById(int id);
 
     // другие методы по необходимости
 }

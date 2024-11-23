@@ -22,6 +22,10 @@ public class Task {
     @ColumnInfo(name = "status")
     public boolean status;
 
+    public int getId(){
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }
