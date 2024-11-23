@@ -21,8 +21,8 @@ public interface TaskDao {
     @Query("DELETE FROM tasks WHERE id = :id")
     void deleteTask(int id);
 
-    @Query("SELECT * FROM tasks WHERE date = :date")
-    List<Task> getTasksByDate(String date);
+    @Query("SELECT * FROM tasks WHERE date = :id")
+    Task getTasksById(String id);
 
     // другие методы по необходимости
 }

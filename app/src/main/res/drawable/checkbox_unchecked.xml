@@ -1,5 +1,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <stroke android:color="#000000" android:width="2dp"/>  <!-- Черная обводка -->
+    <stroke android:color="@color/commonText" android:width="2dp"/>  <!-- Черная обводка -->
     <corners android:radius="4dp"/>  <!-- Скругленные углы -->
     <size android:width="20dp" android:height="20dp"/>  <!-- Размер квадратика -->
 </shape>
