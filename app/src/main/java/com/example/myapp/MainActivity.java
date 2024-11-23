@@ -3,14 +3,18 @@ package com.example.myapp;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
 import java.util.ArrayList;
@@ -97,18 +101,69 @@ public class MainActivity extends AppCompatActivity {
                                 dateTextView.setText(date);  // Устанавливаем дату как заголовок
                                 dateTextView.setTextSize(18);
                                 dateTextView.setTypeface(null, Typeface.BOLD);
-                                dateTextView.setPadding(60, 0, 40, 20);
+                                dateTextView.setPadding(60, 20, 40, 20);
+                                int dateTextColor = ContextCompat.getColor(MainActivity.this, R.color.commonText);
+                                dateTextView.setTextColor(dateTextColor);
                                 dateLayout.addView(dateTextView);
-                                  // Добавляем TextView с датой
 
-                                // Для каждой задачи на эту дату создаем новый TextView и добавляем
+                                // Для каждой задачи на эту дату создаем новый LinearLayout с TextView и ImageView
                                 for (Task task : tasksByDate.get(date)) {
+                                    // Составляем строку с названием и временем задачи
+                                    String taskDetails = task.getTitle() + " - " + task.getTime();
 
+                                    // Создаем новый LinearLayout для отображения задачи
+                                    LinearLayout taskLayout = new LinearLayout(MainActivity.this);
+                                    taskLayout.setOrientation(LinearLayout.HORIZONTAL);  // Горизонтальная ориентация
+
+                                    // Создаем TextView для названия задачи с фиксированной шириной
                                     TextView taskTextView = new TextView(MainActivity.this);
                                     taskTextView.setText(task.getTitle());  // Устанавливаем название задачи
                                     taskTextView.setTextSize(16);
-                                    taskTextView.setPadding(60, 0, 40, 30);
-                                    dateLayout.addView(taskTextView);  // Добавляем TextView с задачей
+                                    int taskTextColor = ContextCompat.getColor(MainActivity.this, R.color.commonText);
+                                    // Устанавливаем цвет для текста
+                                    taskTextView.setTextColor(taskTextColor);
+
+                                    // Устанавливаем фиксированную ширину (150 пикселей) и allow wrapping
+                                    LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                                            (int) (190 * getResources().getDisplayMetrics().density),
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                    );
+                                    taskTextView.setLayoutParams(titleParams);  // Устанавливаем LayoutParams с фиксированной шириной
+
+                                    taskTextView.setSingleLine(false);  // Разрешаем несколько строк
+                                    taskTextView.setEllipsize(null);  // Убираем обрезку текста
+                                    taskTextView.setPadding(60, 0, 0, 30);  // Добавляем отступ слева
+                                    taskLayout.addView(taskTextView);  // Добавляем название задачи в layout
+
+                                    // Создаем TextView для времени задачи с отступом 20 пикселей
+                                    TextView timeTextView = new TextView(MainActivity.this);
+                                    timeTextView.setText(task.getTime());  // Устанавливаем время задачи
+                                    timeTextView.setTextSize(16);
+                                    timeTextView.setPadding(20, 0, 0, 30);  // Отступы: 20 пикселей справа от названия
+                                    int timeTextColor = ContextCompat.getColor(MainActivity.this, R.color.commonText);
+                                    timeTextView.setTextColor(timeTextColor);
+                                    taskLayout.addView(timeTextView);  // Добавляем время в layout
+
+                                    // Создаем ImageView для отображения статуса задачи
+                                    ImageView statusImageView = new ImageView(MainActivity.this);
+                                    if (task.getStatus()) {
+                                        statusImageView.setImageResource(R.drawable.checkbox_checked);  // Закрашенный квадратик
+                                    } else {
+                                        statusImageView.setImageResource(R.drawable.checkbox_unchecked);  // Незакрашенный квадратик
+                                    }
+
+                                    // Устанавливаем параметры для ImageView
+                                    LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                                    imageParams.gravity = Gravity.CENTER_VERTICAL;  // Центрируем по вертикали
+                                    statusImageView.setLayoutParams(imageParams);
+                                    imageParams.setMargins(30, 5 ,0, 40);
+
+                                    // Добавляем ImageView в LinearLayout с задачей
+                                    taskLayout.addView(statusImageView);
+
+                                    // Добавляем LinearLayout с задачей и статусом в основной layout
+                                    dateLayout.addView(taskLayout);
                                 }
 
                                 // Добавляем весь LinearLayout для этой даты в основной контейнер
@@ -136,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         fetchData();  // Загружаем данные при возвращении в MainActivity
     }
 }
+
 
 
 
