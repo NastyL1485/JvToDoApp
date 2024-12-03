@@ -13,11 +13,20 @@ public interface TaskDao {
     @Query("SELECT * FROM tasks")
     List<Task> getAllTasks();
 
-    @Query("SELECT * FROM tasks WHERE status = 1") // 1 - true
-    List<Task> getCompletedTasks();
+    @Query("SELECT * FROM tasks WHERE status = 1 AND id = :id")
+    Task getCompletedTasksById(int id);
 
-    @Query("SELECT * FROM tasks WHERE status = 0") // 0 - false
-    List<Task> getPendingTasks();
+    @Query("SELECT status FROM tasks WHERE id = :id")
+    boolean getStatus(int id);  // Возвращаем только статус
+
+    @Query("UPDATE tasks SET status = 1 WHERE id = :id")
+    void setCompletedStatus(int id); // Метод для изменения статуса на выполненный
+
+    @Query("UPDATE tasks SET status = 0 WHERE id = :id")
+    void setUncompletedStatus(int id); // Метод для изменения статуса на невыполненный
+
+    @Query("SELECT * FROM tasks WHERE status = 0 AND id = :id") // 0 - false
+    Task getUncompletedTasksById(int id);
 
     @Delete
     void deleteTask(Task task);

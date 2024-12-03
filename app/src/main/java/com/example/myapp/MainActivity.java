@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                                     taskLayout.addView(taskTextView);  // Добавляем название задачи в layout
 
                                     taskTextView.setOnTouchListener(new View.OnTouchListener() {
-                                        private static final int LONG_PRESS_THRESHOLD = 1000; // 3 секунды
+                                        private static final int LONG_PRESS_THRESHOLD = 1000; // 1 секунда
                                         @SuppressLint("ClickableViewAccessibility")
                                         private Handler handler = new Handler();
                                         private Runnable runnable;
@@ -191,15 +191,48 @@ public class MainActivity extends AppCompatActivity {
                                         statusImageView.setImageResource(R.drawable.checkbox_unchecked);  // Незакрашенный квадратик
                                     }
 
+
                                     // Устанавливаем параметры для ImageView
                                     LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
                                             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                                    imageParams.gravity = Gravity.CENTER_VERTICAL;  // Центрируем по вертикали
                                     statusImageView.setLayoutParams(imageParams);
                                     imageParams.setMargins(30, 5 ,0, 40);
 
                                     // Добавляем ImageView в LinearLayout с задачей
                                     taskLayout.addView(statusImageView);
+
+                                    statusImageView.setOnTouchListener(new View.OnTouchListener() {
+                                        private static final int LONG_PRESS_THRESHOLD = 1;
+                                        @SuppressLint("ClickableViewAccessibility")
+                                        private Handler handler = new Handler();
+                                        private Runnable runnable;
+
+                                        @Override
+                                        public boolean onTouch(View v, MotionEvent event) {
+                                            switch (event.getAction()) {
+                                                case MotionEvent.ACTION_DOWN:
+                                                    // Запускаем отсчет времени
+                                                    runnable = new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            changeStatus(task.getId());  // Показать диалог удаления
+                                                        }
+                                                    };
+                                                    handler.postDelayed(runnable, LONG_PRESS_THRESHOLD); // Запускать через 3 секунды
+                                                    return true;
+
+                                                case MotionEvent.ACTION_UP:
+                                                case MotionEvent.ACTION_CANCEL:
+                                                    // Если пользователь отпустил палец или отменил действие, отменяем обработку
+                                                    handler.removeCallbacks(runnable);
+
+                                                    // Важно! Вызов performClick() для правильной обработки кликов (предупреждение)
+                                                    v.performClick(); // Это вызовет корректную обработку клика
+                                                    return true;
+                                            }
+                                            return false;
+                                        }
+                                    });
 
                                     // Добавляем LinearLayout с задачей и статусом в основной layout
                                     dateLayout.addView(taskLayout);
@@ -252,6 +285,24 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
+    private void changeStatus(int taskId) {
+        new Thread(() -> {
+            try {
+                boolean currentStatus = database.taskDao().getStatus(taskId);
+
+                if (currentStatus) {
+                    database.taskDao().setUncompletedStatus(taskId);  // Меняем на невыполненный
+                } else {
+                    database.taskDao().setCompletedStatus(taskId);    // Меняем на выполненный
+                }
+
+                runOnUiThread(() -> fetchData());  // Обновляем данные на UI
+
+            } catch (Exception e) {
+                Log.e("MainActivity", "Ошибка при изменении статуса задачи", e);
+            }
+        }).start();
+    }
 
     @Override
     protected void onResume() {
