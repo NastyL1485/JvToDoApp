@@ -10,11 +10,8 @@ public interface TaskDao {
     @Insert
     void insert(Task task);
 
-    @Query("SELECT * FROM tasks")
+    @Query("SELECT * FROM tasks ORDER BY date ASC")
     List<Task> getAllTasks();
-
-    @Query("SELECT * FROM tasks WHERE status = 1 AND id = :id")
-    Task getCompletedTasksById(int id);
 
     @Query("SELECT status FROM tasks WHERE id = :id")
     boolean getStatus(int id);  // Возвращаем только статус
@@ -25,14 +22,9 @@ public interface TaskDao {
     @Query("UPDATE tasks SET status = 0 WHERE id = :id")
     void setUncompletedStatus(int id); // Метод для изменения статуса на невыполненный
 
-    @Query("SELECT * FROM tasks WHERE status = 0 AND id = :id") // 0 - false
-    Task getUncompletedTasksById(int id);
-
     @Delete
     void deleteTask(Task task);
 
     @Query("SELECT * FROM tasks WHERE id = :id")
     Task getTaskById(int id);
-
-    // другие методы по необходимости
 }
