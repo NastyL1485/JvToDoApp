@@ -224,11 +224,6 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private void updateTaskStatusImageView(ImageView statusImageView, Task task) {
-        task.setStatus(!task.getStatus());
-        statusImageView.setImageResource(task.getStatus() ? R.drawable.checkbox_checked : R.drawable.checkbox_unchecked);
-    }
-
     private void showNoTasksMessage() {
         TextView emptyTextView = new TextView(this);
         emptyTextView.setText("Нет задач для отображения");
@@ -259,25 +254,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 Log.e("MainActivity", "Ошибка при удалении задачи", e);
-            }
-        }).start();
-    }
-
-    private void changeStatus(int taskId) {
-        new Thread(() -> {
-            try {
-                boolean currentStatus = database.taskDao().getStatus(taskId);
-
-                if (currentStatus) {
-                    database.taskDao().setUncompletedStatus(taskId);  // Меняем на невыполненный
-                } else {
-                    database.taskDao().setCompletedStatus(taskId);    // Меняем на выполненный
-                }
-
-                runOnUiThread(() -> fetchData());  // Обновляем данные на UI
-
-            } catch (Exception e) {
-                Log.e("MainActivity", "Ошибка при изменении статуса задачи", e);
             }
         }).start();
     }
