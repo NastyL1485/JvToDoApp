@@ -62,74 +62,61 @@ public class AddNoteActivity extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Создаем диалог выбора даты
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Форматируем выбранную дату в формат yyyy-MM-dd
                     String formattedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
 
-                    // Обновляем текст на TextView с выбранной датой в нужном формате
                     selectedDateTextView.setText("Выбранная дата: " + formattedDate);
 
-                    // Сохраняем эту дату в поле, которое будет использоваться при сохранении задачи
                     noteDate.setText(formattedDate);
                 }, year, month, day);
 
-        datePickerDialog.show(); // Показываем диалог выбора даты
+        datePickerDialog.show();
     }
 
     private void saveTask() {
         // Получаем данные из полей ввода
         String title = noteName.getText().toString();
-        String date = noteDate.getText().toString();  // Дата уже отформатирована в yyyy-MM-dd
+        String date = noteDate.getText().toString();
         String time = noteTime.getText().toString();
 
-        // Логирование полученных данных
         Log.d("AddNoteActivity", "Заголовок заметки: " + title);
         Log.d("AddNoteActivity", "Дата: " + date);
         Log.d("AddNoteActivity", "Время: " + time);
 
-        // Проверка на пустые поля
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(date) || TextUtils.isEmpty(time)) {
             Log.e("AddNoteActivity", "Ошибка: одно из полей пустое!");
             Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show();
-            return; // Прерываем выполнение, если одно из полей пустое
+            return;
         }
 
-        // Логирование, что поля заполнены
         Log.d("AddNoteActivity", "Все поля заполнены, продолжаем сохранение.");
 
-        // Получаем объект базы данных и DAO
         AppDatabase db = App.getDatabase(getApplicationContext());
         TaskDao taskDao = db.taskDao();
         Task task = new Task();
         task.title = title;
-        task.date = date;  // Здесь сохраняем дату в формате yyyy-MM-dd
+        task.date = date;
         task.time = time;
         task.status = false;
 
-        // Логирование данных задачи перед сохранением
         Log.d("AddNoteActivity", "Создан объект Task: " + task.toString());
 
-        // Асинхронная вставка данных в базу данных
         new Thread(() -> {
             try {
-                // Проверка и логирование DAO
                 if (taskDao != null) {
                     Log.d("AddNoteActivity", "TaskDao инициализировано.");
                 } else {
                     Log.e("AddNoteActivity", "Ошибка: taskDao не инициализировано.");
                 }
 
-                // Вставка данных в базу
                 taskDao.insert(task);
                 Log.d("AddNoteActivity", "Задача успешно сохранена в базе данных.");
 
-                // Обновление UI на главном потоке
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Задача сохранена!", Toast.LENGTH_SHORT).show();
-                    setResult(RESULT_OK);  // Возвращаем результат в MainActivity
-                    finish(); // Закрытие активности после сохранения
+                    setResult(RESULT_OK);
+                    finish();
                 });
             } catch (Exception e) {
                 Log.e("AddNoteActivity", "Ошибка при сохранении задачи в базу данных.", e);

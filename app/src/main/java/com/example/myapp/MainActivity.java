@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
-    private LinearLayout tasksLayout;  // Родительский контейнер для всех динамически добавляемых LinearLayout
+    private LinearLayout tasksLayout;
     private AppDatabase database;
     private ActivityResultLauncher<Intent> startForResult;
 
@@ -35,31 +35,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tasksLayout = findViewById(R.id.tasksLayout);  // Получаем контейнер для задач
+        tasksLayout = findViewById(R.id.tasksLayout);
         database = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "todo_database").build();
 
-        fetchData(); // Изначальный запрос данных
+        fetchData();
 
-        // Регистрация ActivityResultLauncher
+
         startForResult = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
-                        // После добавления новой заметки обновляем данные
-                        fetchData();  // Перезагружаем данные
+                        fetchData();
                     }
                 }
         );
     }
 
-    // Метод для создания новой заметки
     public void createNewNote(View view) {
         Intent intent = new Intent(this, AddNoteActivity.class);
-        startForResult.launch(intent); // Запускаем AddNoteActivity и ждем результат
+        startForResult.launch(intent);
     }
 
-    // Метод для получения данных из базы данных
     public void fetchData() {
         new Thread(() -> {
             try {
@@ -177,16 +174,13 @@ public class MainActivity extends AppCompatActivity {
         imageParams.setMargins(30, 5, 0, 40);
         statusImageView.setLayoutParams(imageParams);
 
-        // Добавляем обработчик клика для изменения статуса задачи
+
         statusImageView.setOnClickListener(v -> {
-            // Меняем статус задачи
             boolean newStatus = !task.getStatus();
             task.setStatus(newStatus);
 
-            // Обновляем изображение для отображения нового статуса
             statusImageView.setImageResource(newStatus ? R.drawable.checkbox_checked : R.drawable.checkbox_unchecked);
 
-            // Сохраняем изменения в базе данных (если необходимо)
             new Thread(() -> {
                 try {
                     database.taskDao().updateTaskStatus(task.getId(), newStatus);
@@ -241,15 +235,13 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    // Метод для удаления задачи по ее id
     private void deleteTaskById(int taskId) {
         new Thread(() -> {
             try {
-                // Получаем задачу по id и удаляем
                 Task taskToDelete = database.taskDao().getTaskById(taskId);
                 if (taskToDelete != null) {
-                    database.taskDao().deleteTask(taskToDelete);  // Удаляем задачу
-                    fetchData();  // Обновляем отображение задач
+                    database.taskDao().deleteTask(taskToDelete);
+                    fetchData();
                 }
             } catch (Exception e) {
                 Log.e("MainActivity", "Ошибка при удалении задачи", e);
@@ -260,6 +252,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        fetchData();  // Загружаем данные при возвращении в MainActivity
+        fetchData();
     }
 }
