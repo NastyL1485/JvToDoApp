@@ -13,15 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Calendar;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class AddNoteActivity extends AppCompatActivity {
 
@@ -147,22 +139,4 @@ public class AddNoteActivity extends AppCompatActivity {
             }
         }).start();
     }
-
-
-    //    private void sendData(){
-//        // Получаем данные из EditText
-//        String name = noteName.getText().toString();
-//        String time = noteTime.getText().toString();
-//        String date = noteDate.getText().toString();
-//
-//        // Создаём Intent для перехода на вторую активность
-//        Intent intent = new Intent(this, MainActivity.class);
-//        // Передаём данные через Intent
-//        intent.putExtra("EXTRA_NAME", name);
-//        intent.putExtra("EXTRA_TIME", time);
-//        intent.putExtra("EXTRA_DATE", date);
-//
-//        // Запускаем вторую активность
-//        startActivity(intent);
-//    }
 }

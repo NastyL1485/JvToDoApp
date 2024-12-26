@@ -1,6 +1,5 @@
 package com.example.myapp;
 
-
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
